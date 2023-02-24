@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nfs-provisioner
+  namespace: default                    # 命名空间按自己情况修改，但是要把这三个yaml配置文件的所有namespace都保持一致
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nfs-provisioner
+  namespace: default                     # 命名空间按自己情况修改，但是要把这三个yaml配置文件的所有namespace都保持一致
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nfs-provisioner
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nfs-provisioner
+    spec:
+      serviceAccount: nfs-provisioner
+      containers:
+        - name: nfs-provisioner
+          image: registry.cn-chengdu.aliyuncs.com/wangyunan_images_public/nfs-client-provisioner:v1
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: liuxiangbiao.com/nfs  # 此处名字建议按自己情况需要修改和后面的 storageclassname 对应
+            - name: NFS_SERVER
+              value: 192.168.0.60          # nfs地址按情况修改
+            - name: NFS_PATH
+              value: /root/data/mysql      # nfs挂在路径按情况修改
+          resources:
+            requests:
+              cpu: 500m              # resources这里的cpu和memory按自己情况修改
+              memory: 300M
+            limits:
+              cpu: 1000m
+              memory: 500M
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: 192.168.0.60            # nfs服务端地址
+            path: /root/data/mysql          # nfs挂载路径地址根据自己情况更改

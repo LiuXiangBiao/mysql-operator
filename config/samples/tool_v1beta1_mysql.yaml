@@ -1,0 +1,30 @@
+apiVersion: tool.liuxiangbiao.com/v1beta1
+kind: Mysql
+metadata:
+  name: mysql-operator
+spec:
+  replicas: 1                               # MySQL 数量
+  image: mysql:5.7                          # mysql版本镜像 默认5.7
+  ports:                                    # service 端口 默认如下
+  - name: mysql-operator
+    port: 3306
+    targetPort: 3306
+  password: "123456"                        # mysql密码 默认 123456
+  storage_class_name: liuxiangbiao-nfs      # 与之前创建的 storageclass.yaml的 name 一致
+  pvc_resource_size: 300Mi                  # pvc 资源需求大小
+  config_map_data:                          # 数据库配置文件
+    my.cnf: |-
+      [client]
+      default-character-set=utf8mb4
+      [mysql]
+      default-character-set=utf8mb4
+      [mysqld] 
+      max_connections = 2000
+      secure_file_priv=/var/lib/mysql
+      sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+
+
+
+
+
+

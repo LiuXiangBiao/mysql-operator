@@ -1,0 +1,6 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: liuxiangbiao-nfs             # 跟据自己需求更改  和前面的value对应
+  namespace: default                  # 命名空间按自己情况修改，但是要把这三个yaml配置文件的所有namespace都保持一致
+provisioner: liuxiangbiao.com/nfs    # 根据自己需求更改
