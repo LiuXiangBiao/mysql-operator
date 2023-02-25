@@ -29,7 +29,7 @@ git clone https://github.com/LiuXiangBiao/mysql-operator.git
 cd mysql
 ```
 ```shell
-chmod 755 bin/*
+chmod 744 bin/*
 ```
 
 
